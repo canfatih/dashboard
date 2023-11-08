@@ -1,24 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
 
+import './App.css';
+import { Footer } from './components/Footer';
+import { Main } from './components/Main';
+import { Navbar } from './components/Navbar';
+import { MainContext } from './context';
+import { useState,useEffect } from 'react';
+import { Route,Routes,NavLink } from 'react-router-dom';
+import { Users } from './components/Users';
 function App() {
+  
+const[fetcheddata,setFetchedData]=useState([])
+
+const fetchmetod=()=>{
+fetch("https://jsonplaceholder.typicode.com/comments").then(data=>data.json()).then(result=>setFetchedData(result))
+console.log(fetcheddata)
+}
+    useEffect(() => {
+      fetchmetod();
+      
+  },[]);
+
+  
+  const data={
+    fetcheddata,
+    setFetchedData
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    
+      <MainContext.Provider value={data} className="App">
+     <Navbar></Navbar>
+     <Routes>
+     <Route path="/" element={<Main></Main>}></Route>
+     <Route path="/user" element={<Users></Users>}>
+
+     </Route>
+     </Routes>
+     <Footer></Footer>
+    </MainContext.Provider>
+   
+   
   );
 }
 
